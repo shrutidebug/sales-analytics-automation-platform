@@ -1,0 +1,6 @@
+pandas
+openpyxl
+Faker
+psycopg2-binary
+SQLAlchemy
+python-dotenv

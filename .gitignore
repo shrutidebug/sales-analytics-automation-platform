@@ -1,0 +1,106 @@
+# ==============================
+# Python
+# ==============================
+
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# ==============================
+# Jupyter / Python tools
+# ==============================
+
+.ipynb_checkpoints/
+
+# ==============================
+# Project-generated data
+# ==============================
+
+data/raw/*
+data/processed/*
+data/processed_files.txt
+
+# Keep folder structure in Git
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# ==============================
+# Generated reports
+# ==============================
+
+reports/*
+!reports/.gitkeep
+
+# ==============================
+# Logs
+# ==============================
+
+logs/*
+!logs/.gitkeep
+
+# ==============================
+# Local configuration / secrets
+# ==============================
+
+.env
+.env.*
+!.env.example
+*.secret
+secrets.json
+credentials.json
+
+# ==============================
+# PostgreSQL / database dumps
+# ==============================
+
+*.sql.backup
+*.dump
+*.bak
+
+# ==============================
+# Excel temporary files
+# ==============================
+
+~$*.xlsx
+~$*.xls
+
+# ==============================
+# Operating system files
+# ==============================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==============================
+# IDE / editor files
+# ==============================
+
+.vscode/
+.idea/
+
+# ==============================
+# UiPath local/generated files
+# ==============================
+
+.local/
+*.user
+*.userosscache
+*.suo
+
+# ==============================
+# UiPath generated metadata
+# ==============================
+
+UiPath/**/.objects/
+UiPath/**/.screenshots/
+UiPath/**/.settings/
+UiPath/**/.storage/
+UiPath/**/.tmh/
+
+# Runtime tracking / backup files
+data/processed_files_backup.txt
