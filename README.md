@@ -10,8 +10,8 @@ An end-to-end **Sales Analytics & Automation Platform** that transforms raw Exce
 
 ## Results
 
-- **16,094 sales records** loaded into PostgreSQL `fact_sales`
-- **14,860 unique Order IDs** represented in the final dataset
+- **14,856 sales records** loaded into PostgreSQL `fact_sales`
+- **14,856 unique Order IDs** represented in the final dataset
 - **0 exact duplicate transaction records** after reruns
 - **5-page Power BI dashboard** covering executive, regional, product, customer, and time-based analysis
 - **Automated PDF generation and email delivery** through UiPath
