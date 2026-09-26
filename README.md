@@ -4,6 +4,19 @@ An end-to-end **Sales Analytics & Automation Platform** that transforms raw Exce
 
 **Excel → Python ETL → PostgreSQL → SQL Analytics → Power BI → UiPath → PDF → Email**
 
+![Executive Overview](docs/screenshots/Executive_overview.png)
+
+---
+
+## Results
+
+- **16,094 sales records** loaded into PostgreSQL `fact_sales`
+- **14,860 unique Order IDs** represented in the final dataset
+- **0 exact duplicate transaction records** after reruns
+- **5-page Power BI dashboard** covering executive, regional, product, customer, and time-based analysis
+- **Automated PDF generation and email delivery** through UiPath
+- **Incremental file processing** prevents already-processed files from being processed again
+
 ---
 
 ## 📌 Project Overview
