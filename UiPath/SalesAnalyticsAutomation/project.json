@@ -1,7 +1,7 @@
 {
   "name": "SalesAnalyticsAutomation",
   "projectId": "b9ca9c4e-289d-4074-a986-380514488822",
-  "description": "I built an end-to-end Sales Analytics and Automation Platform using Python, Pandas, PostgreSQL, Power BI, and UiPath. I generated and cleaned sales data, loaded it into a star-schema database, created Power BI dashboards, and automated ETL, report generation, email distribution, and transaction logging using UiPath REFramework and Orchestrator.",
+  "description": "I built an end-to-end Sales Analytics and Automation Platform using Python, Pandas, PostgreSQL, Power BI, and UiPath. I generated and cleaned sales data, loaded it into a star-schema database, created Power BI dashboards, and automated ETL, report generation, email distribution, and execution logging using UiPath.",
   "main": "Main.xaml",
   "dependencies": {
     "UiPath.Mail.Activities": "[2.11.10]",
