@@ -170,9 +170,9 @@ The PostgreSQL database follows a **star schema**.
                   └────────┬────────┘
                            │
                            │
-┌─────────────────┐        ▼        ┌─────────────────┐
-│    dim_date     │────► fact_sales ◄────│  dim_product   │
-└─────────────────┘        ▲        └─────────────────┘
+┌─────────────────┐        ▼             ┌─────────────────┐
+│    dim_date     │────► fact_sales ◄────│   dim_product   │
+└─────────────────┘        ▲             └─────────────────┘
                            │
                            │
                   ┌────────┴────────┐
@@ -348,39 +348,81 @@ Execution information is stored in dedicated log files for monitoring and troubl
 
 ---
 
-# 🧪 Testing & Validation
+# 📸 Project Screenshots
 
-The completed automation was tested against multiple data-quality and system-failure scenarios.
+The following screenshots document the major components of the completed platform.
 
-| Test | Result |
-|---|:---:|
-| No new files | ✅ |
-| Missing Customer ID | ✅ |
-| Missing Product ID | ✅ |
-| Invalid Date | ✅ |
-| Database failure | ✅ |
-| Power BI failure | ✅ |
-| PDF export timing issue | ✅ Fixed |
-| PDF email delivery | ✅ |
-| Recovery after failure | ✅ |
-| Logging verification | ✅ |
-| Processed-file tracking | ✅ |
-| Duplicate processing protection | ✅ |
-| Fact-table duplicate validation | ✅ |
+## Power BI Dashboard
 
-The final duplicate-integrity query returned **0 duplicate transaction groups** using the defined transaction fields.
+### Executive Overview
+
+![Executive Overview](docs/screenshots/Executive_overview.png)
+
+### Regional Analysis
+
+![Regional Analysis](docs/screenshots/Regional_analysis.png)
+
+### Product Analysis
+
+![Product Analysis](docs/screenshots/Product_analysis.png)
+
+### Customer Analysis
+
+![Customer Analysis](docs/screenshots/Customer_analysis.png)
+
+### Time & Sales Analysis
+
+![Time & Sales Analysis](docs/screenshots/Time_Sales_analysis.png)
+
+## PostgreSQL Star Schema
+
+The database uses a central `fact_sales` table connected to customer, product, region, and date dimensions.
+
+![PostgreSQL Star Schema](docs/screenshots/Postgres_star_schema.png)
+
+## UiPath Automation
+
+### File Detection & ETL
+
+The workflow detects unprocessed files and triggers the Python ETL process.
+
+![UiPath File Detection and ETL](docs/screenshots/UiPath_file_detection_etl.png)
+
+### Reporting Automation
+
+The workflow refreshes Power BI, exports the report to PDF, copies the completed report, sends the PDF through SMTP email, and writes execution logs.
+
+![UiPath Reporting Workflow](docs/screenshots/UiPath_reporting_workflow.png)
 
 ---
+
+
 
 # 📁 Project Structure
 
 ```text
 Sales Analytics & Automation Platform/
+├── README.md
+│
+├── .gitignore
+│
+├── requirements.txt
 │
 ├── data/
 │   ├── raw/
 │   ├── processed/
 │   └── processed_files.txt
+│ 
+├── docs/
+│   └── screenshots/
+│       ├── Executive_overview.png
+│       ├── Product_analysis.png
+│       ├── Regional_analysis.png
+│       ├── Customer_analysis.png
+│       ├── Time_Sales_analysis.png
+│       ├── UiPath_file_detection_etl.png
+│       ├── UiPath_reporting_workflow.png
+│       └── Postgres_star_schema.png
 │
 ├── logs/
 │   ├── automation_log.txt
@@ -406,22 +448,47 @@ Sales Analytics & Automation Platform/
 
 ---
 
+
+
 # 🛠️ Technology Stack
 
 | Technology | Purpose |
 |---|---|
 | Python | Data generation, validation and ETL |
 | Pandas | Data processing and transformation |
-| Faker | Synthetic sales-data generation |
+| OpenPyXL | Excel file handling |
+| Faker | Synthetic data generation |
 | PostgreSQL | Database and analytical data storage |
 | SQL | Business and sales analytics |
-| Excel | Source data |
+| Excel | Source Data |
 | Power BI | Dashboard and visualization |
 | UiPath | Workflow automation |
 | SMTP | Automated email delivery |
 | Git | Version control |
 
 ---
+
+# 🧪 Testing & Validation
+
+The platform was tested for:
+
+- No-new-file handling
+- Missing Customer IDs
+- Missing Product IDs
+- Invalid dates
+- Database failure
+- Power BI failure
+- PDF export timing
+- PDF email delivery
+- Logging
+- Processed-file tracking
+- Duplicate processing protection
+- Fact-table duplicate validation
+
+The final duplicate-integrity check returned **0 duplicate transaction groups**.
+
+---
+
 
 # ⚙️ Installation & Setup
 
@@ -539,141 +606,6 @@ Potential improvements include:
 - Centralizing configuration and file paths
 - Adding automated unit and integration tests
 - Expanding the dashboard with additional KPIs
-
----
-
-# 📊 Project Status
-
-**Core implementation:** Completed ✅
-
-**End-to-end integration:** Completed ✅
-
-**Testing & error handling:** Completed ✅
-
-**Documentation:** In progress 🚧
-
----
-
-# 👩‍💻 Author
-
-**Shruti Saxena**
-
----
-
-## License
-
-This project is intended as a personal portfolio and learning project.
-# 📸 Project Screenshots
-
-The following screenshots document the major components of the completed platform.
-
-## Power BI Dashboard
-
-### Executive Overview
-
-![Executive Overview](docs/screenshots/Executive_overview.png)
-
-### Regional Analysis
-
-![Regional Analysis](docs/screenshots/Regional_analysis.png)
-
-### Product Analysis
-
-![Product Analysis](docs/screenshots/Product_analysis.png)
-
-### Customer Analysis
-
-![Customer Analysis](docs/screenshots/Customer_analysis.png)
-
-### Time & Sales Analysis
-
-![Time & Sales Analysis](docs/screenshots/Time_Sales_analysis.png)
-
-## PostgreSQL Star Schema
-
-The database uses a central `fact_sales` table connected to customer, product, region, and date dimensions.
-
-![PostgreSQL Star Schema](docs/screenshots/Postgres_star_schema.png)
-
-## UiPath Automation
-
-### File Detection & ETL
-
-The workflow detects unprocessed files and triggers the Python ETL process.
-
-![UiPath File Detection and ETL](docs/screenshots/UiPath_file_detection_etl.png)
-
-### Reporting Automation
-
-The workflow refreshes Power BI, exports the report to PDF, copies the completed report, sends the PDF through SMTP email, and writes execution logs.
-
-![UiPath Reporting Workflow](docs/screenshots/UiPath_reporting_workflow.png)
-
----
-
-# 📁 Project Structure
-
-```text
-Sales Analytics & Automation Platform/
-├── README.md
-├── .gitignore
-├── requirements.txt
-├── data/
-├── docs/
-│   └── screenshots/
-│       ├── Executive_overview.png
-│       ├── Product_analysis.png
-│       ├── Regional_analysis.png
-│       ├── Customer_analysis.png
-│       ├── Time_Sales_analysis.png
-│       ├── UiPath_file_detection_etl.png
-│       ├── UiPath_reporting_workflow.png
-│       └── Postgres_star_schema.png
-├── logs/
-├── reports/
-├── src/
-└── UiPath/
-    └── SalesAnalyticsAutomation/
-        └── Main.xaml
-```
-
----
-
-# 🛠️ Technology Stack
-
-| Technology | Purpose |
-|---|---|
-| Python | Data generation, validation and ETL |
-| Pandas | Data processing |
-| OpenPyXL | Excel file handling |
-| Faker | Synthetic data generation |
-| PostgreSQL | Database storage |
-| SQL | Business analytics |
-| Power BI | Dashboard and visualization |
-| UiPath | Workflow automation |
-| SMTP | Automated email delivery |
-| Git | Version control |
-
----
-
-# 🧪 Testing & Validation
-
-The platform was tested for:
-
-- No-new-file handling
-- Missing Customer IDs
-- Missing Product IDs
-- Invalid dates
-- Database failure
-- Power BI failure
-- PDF export timing
-- PDF email delivery
-- Logging
-- Processed-file tracking
-- Duplicate processing protection
-- Fact-table duplicate validation
-
-The final duplicate-integrity check returned **0 duplicate transaction groups**.
 
 ---
 
