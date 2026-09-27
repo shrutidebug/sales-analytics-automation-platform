@@ -7,12 +7,65 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-RAW_DATA = Path("data/raw")
-PROCESSED_FILE = Path("data/processed_files.txt")
+def parse_dates(series):
+    """
+    Parse sales dates from different Excel date formats.
+
+    Handles:
+    - Actual Excel/Pandas datetime values
+    - YYYY-MM-DD
+    - DD/MM/YYYY
+    - DD-MMM-YYYY
+    - MM/DD/YYYY
+    - YYYY/MM/DD
+    - DD.MM.YYYY
+    - DD-MM-YYYY
+    """
+
+    # First try normal pandas parsing.
+    parsed = pd.to_datetime(
+        series,
+        errors="coerce"
+    )
+
+    # If values are still strings that could not be parsed,
+    # try common explicit formats one by one.
+    formats = [
+        "%Y-%m-%d",
+        "%d/%m/%Y",
+        "%d-%b-%Y",
+        "%m/%d/%Y",
+        "%Y/%m/%d",
+        "%d.%m.%Y",
+        "%d-%m-%Y"
+    ]
+
+    for fmt in formats:
+
+        missing = parsed.isna()
+
+        if not missing.any():
+            break
+
+        parsed.loc[missing] = pd.to_datetime(
+            series.loc[missing],
+            format=fmt,
+            errors="coerce"
+        )
+
+    return parsed
+
+
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+RAW_DATA = PROJECT_ROOT / "data" / "raw"
+PROCESSED_FILE = PROJECT_ROOT / "data" / "processed_files.txt"
 
 all_files = sorted(
     file.name
     for file in RAW_DATA.glob("*.xlsx")
+    if not file.name.startswith("~$")
 )
 
 processed_files = set()
@@ -32,7 +85,7 @@ else:
         file
         for file in all_files
         if file not in processed_files
-]
+    ]
 
 print("\nINPUT FILE CHECK")
 print("----------------")
@@ -45,13 +98,19 @@ for file in files:
 
 if not files:
     print("No new files to process.")
-    exit()
+    sys.exit(0)
+
+
+# =========================
+# READ INPUT FILES
+# =========================
 
 dataframes = []
 
 for file in files:
     df = pd.read_excel(RAW_DATA / file)
     dataframes.append(df)
+
 
 # =========================
 # LOAD DIM_CUSTOMER
@@ -75,34 +134,58 @@ customer_columns = {
     "Customer NAME": "customer_name",
     "customer_name": "customer_name",
     "Customer_name": "customer_name"
-    
 }
 
 for df in dataframes:
-    df.rename(columns=customer_columns, inplace=True)
+    df.rename(
+        columns=customer_columns,
+        inplace=True
+    )
 
 customer_data = []
 
 for df in dataframes:
     customer_data.append(
-        df[["customer_id", "customer_name"]]
+        df[[
+            "customer_id",
+            "customer_name"
+        ]]
     )
 
-customers = pd.concat(customer_data, ignore_index=True)
+customers = pd.concat(
+    customer_data,
+    ignore_index=True
+)
 
 # Keep one record per customer
-customers = customers.drop_duplicates(subset=["customer_id"])
+customers = customers.drop_duplicates(
+    subset=["customer_id"]
+)
 
-#Remove records with missing customer ID
-customers = customers.dropna(subset=["customer_id"])
+# Remove records with missing customer ID
+customers = customers.dropna(
+    subset=["customer_id"]
+)
 
 # Validation
 print("\nCUSTOMER VALIDATION")
+print("-------------------")
 print(f"Unique customers: {len(customers)}")
-print(f"Missing customer IDs: {customers['customer_id'].isna().sum()}")
-print(f"Missing customer names: {customers['customer_name'].isna().sum()}")
-print(f"Duplicate customer IDs: {customers['customer_id'].duplicated().sum()}")
+print(
+    f"Missing customer IDs: "
+    f"{customers['customer_id'].isna().sum()}"
+)
+print(
+    f"Missing customer names: "
+    f"{customers['customer_name'].isna().sum()}"
+)
+print(
+    f"Duplicate customer IDs: "
+    f"{customers['customer_id'].duplicated().sum()}"
+)
+
 print(customers.head(10))
+
 
 # =========================
 # LOAD DIM_PRODUCT
@@ -133,27 +216,52 @@ product_columns = {
 product_data = []
 
 for df in dataframes:
-    df.rename(columns=product_columns, inplace=True)
+    df.rename(
+        columns=product_columns,
+        inplace=True
+    )
 
 for df in dataframes:
     product_data.append(
-        df[["product_id", "product_name", "unit_price"]]
+        df[[
+            "product_id",
+            "product_name",
+            "unit_price"
+        ]]
     )
 
-products = pd.concat(product_data, ignore_index=True)
+products = pd.concat(
+    product_data,
+    ignore_index=True
+)
 
 # Remove records with missing product ID
-products = products.dropna(subset=["product_id"])
+products = products.dropna(
+    subset=["product_id"]
+)
 
 # Keep one record per product
-products = products.drop_duplicates(subset=["product_id"])
+products = products.drop_duplicates(
+    subset=["product_id"]
+)
 
 # Validation
 print("\nPRODUCT VALIDATION")
+print("------------------")
 print("Unique products:", len(products))
-print("Missing product IDs:", products["product_id"].isna().sum())
-print("Missing product names:", products["product_name"].isna().sum())
-print("Duplicate product IDs:", products["product_id"].duplicated().sum())
+print(
+    "Missing product IDs:",
+    products["product_id"].isna().sum()
+)
+print(
+    "Missing product names:",
+    products["product_name"].isna().sum()
+)
+print(
+    "Duplicate product IDs:",
+    products["product_id"].duplicated().sum()
+)
+
 print(products)
 
 
@@ -166,26 +274,46 @@ region_data = []
 for df in dataframes:
     region_data.append(
         df[["Region"]]
-        )
+    )
 
-regions = pd.concat(region_data, ignore_index=True)
+regions = pd.concat(
+    region_data,
+    ignore_index=True
+)
 
 # Remove missing regions
-regions = regions.dropna(subset=["Region"])
+regions = regions.dropna(
+    subset=["Region"]
+)
 
 # Keep one record per region
-regions = regions.drop_duplicates(subset=["Region"])
+regions = regions.drop_duplicates(
+    subset=["Region"]
+)
 
 # Rename column
 regions.rename(
-    columns={"Region": "region_name"},
+    columns={
+        "Region": "region_name"
+    },
     inplace=True
 )
 
 print("\nREGION VALIDATION")
-print("Unique regions:", len(regions))
-print("Missing regions:", regions["region_name"].isna().sum())
-print("Duplicate regions:", regions["region_name"].duplicated().sum())
+print("-----------------")
+print(
+    "Unique regions:",
+    len(regions)
+)
+print(
+    "Missing regions:",
+    regions["region_name"].isna().sum()
+)
+print(
+    "Duplicate regions:",
+    regions["region_name"].duplicated().sum()
+)
+
 print(regions)
 
 
@@ -194,6 +322,7 @@ print(regions)
 # =========================
 
 sales_columns = {
+
     # Order
     "Order_ID": "order_id",
     "Order ID": "order_id",
@@ -261,28 +390,26 @@ sales_columns = {
     "Total Sales": "sales_amount",
     "Revenue": "sales_amount",
     "Net Sales": "sales_amount"
-
-    
 }
+
 
 # =========================
 # LOAD RAW FILES FOR FACT
 # =========================
 
-#fact_dataframes = []
-
 sales_data = []
 
 for file in files:
-    df = pd.read_excel(RAW_DATA / file)
 
-    print("\nFile: file")
-    print("Columns:", df.columns.tolist())
-#    fact_dataframes.append(df)
+    df = pd.read_excel(
+        RAW_DATA / file
+    )
 
-# sales_data = []
-
-#for df in fact_dataframes:
+    print("\nFile:", file)
+    print(
+        "Columns:",
+        df.columns.tolist()
+    )
 
     temp_df = df.copy()
 
@@ -291,66 +418,28 @@ for file in files:
         inplace=True
     )
 
-    if file == "sales_jan.xlsx":
-        temp_df["order_date"] = pd.to_datetime(
-            temp_df["order_date"],
-            format="%Y-%m-%d",
-            errors="coerce"
+    # =========================
+    # DATE PARSING
+    # =========================
+
+    temp_df["order_date"] = parse_dates(
+            temp_df["order_date"]
         )
 
-    elif file == "sales_feb.xlsx":
-        temp_df["order_date"] = pd.to_datetime(
-            temp_df["order_date"],
-            format="%d/%m/%Y",
-            errors="coerce"
-        )
+    print(
+        "\nRenamed columns:",
+        list(temp_df.columns)
+    )
 
-    elif file == "sales_mar.xlsx":
-        temp_df["order_date"] = pd.to_datetime(
-            temp_df["order_date"],
-            format="%d-%b-%Y",
-            errors="coerce"
-        )
+    print(
+        "Missing order dates:",
+        temp_df["order_date"].isna().sum()
+    )
 
-    elif file == "sales_apr.xlsx":
-        temp_df["order_date"] = pd.to_datetime(
-            temp_df["order_date"],
-            format="%m/%d/%Y",
-            errors="coerce"
-        )
-
-    elif file == "sales_may.xlsx":
-        temp_df["order_date"] = pd.to_datetime(
-            temp_df["order_date"],
-            format="%Y/%m/%d",
-            errors="coerce"
-        )
-
-    elif file == "sales_june.xlsx":
-        temp_df["order_date"] = pd.to_datetime(
-            temp_df["order_date"],
-            format="%d.%m.%Y",
-            errors="coerce"
-        )
-
-    elif file == "sales_july.xlsx":
-        temp_df["order_date"] = pd.to_datetime(
-            temp_df["order_date"],
-            format="%d-%m-%Y",
-            errors="coerce"
-        )
-
-    else:
-        temp_df["order_date"] = pd.to_datetime(
-            temp_df["order_date"],
-            errors="coerce"
-        ).dt.date
-
-
-    print("\nRenamed columns:",list(temp_df.columns))
-
-    print("Missing order dates:", temp_df["order_date"].isna().sum())
-    print("Date sample:", temp_df["order_date"].head())
+    print(
+        "Date sample:",
+        temp_df["order_date"].head()
+    )
 
     sales_data.append(
         temp_df[
@@ -368,12 +457,21 @@ for file in files:
         ]
     )
 
-sales = pd.concat(sales_data,ignore_index=True)
+
+sales = pd.concat(
+    sales_data,
+    ignore_index=True
+)
 
 print(
-    "Missing order dates:",
+    "\nMissing order dates:",
     sales["order_date"].isna().sum()
 )
+
+
+# =========================
+# DATABASE CONNECTION
+# =========================
 
 conn = psycopg2.connect(
     host=os.getenv("DB_HOST"),
@@ -382,199 +480,88 @@ conn = psycopg2.connect(
     password=os.getenv("DB_PASSWORD")
 )
 
-## Convert order_date to datetime
-sales["order_date"] = pd.to_datetime(
-    sales["order_date"],
-    errors="coerce"
-)
-
-customer_lookup = pd.read_sql(
-    """
-    SELECT customer_key, customer_id
-    FROM dim_customer
-    """,
-    conn
-)
-
-product_lookup = pd.read_sql(
-    """
-    SELECT product_key, product_id
-    FROM dim_product
-    """,
-    conn
-)
-
-region_lookup = pd.read_sql(
-    """
-    SELECT region_key, region_name
-    FROM dim_region
-    """,
-    conn
-)
-
-date_lookup = pd.read_sql(
-    """
-    SELECT date_key, full_date
-    FROM dim_date
-    """,
-    conn
-)
-
-date_lookup["full_date"] = pd.to_datetime(
-    date_lookup["full_date"]
-).dt.date
-
-# Merge sales with dimension tables to get foreign keys
-sales = sales.merge(
-    customer_lookup,
-    on="customer_id",
-    how="left"
-)
-
-sales = sales.merge(
-    product_lookup,
-    on="product_id",
-    how="left"
-)
-
-sales = sales.merge(
-    region_lookup,
-    left_on="region",
-    right_on="region_name",
-    how="left"
-)
-
-invalid_sales = sales[
-    sales["order_date"].isna()
-    | sales["customer_id"].isna()
-    | sales["product_id"].isna()
-    | sales["region"].isna()
-].copy()
-
-print("\nINVALID FACT ROWS:", len(invalid_sales))
-
-print("\nInvalid rows:")
-print(invalid_sales)
-
-sales = sales[
-    sales["order_date"].notna()
-    & sales["customer_id"].notna()
-    & sales["product_id"].notna()
-    & sales["region"].notna()
-].copy()
-
-print("\nVALID FACT ROWS:", len(sales))
-
-sales["order_date"] = pd.to_datetime(
-    sales["order_date"],
-    errors="coerce"
-).dt.normalize()
-
-date_lookup["full_date"] = pd.to_datetime(
-    date_lookup["full_date"]
-).dt.normalize()
-
-sales = sales.merge(
-    date_lookup,
-    left_on="order_date",
-    right_on="full_date",
-    how="left"
-)
-
-print("\nFACT LOOKUP VALIDATION")
-
-
-print(
-    "Missing customer keys:",
-    sales["customer_key"].isna().sum()
-)
-
-print(
-    "Missing product keys:",
-    sales["product_key"].isna().sum()
-)
-
-print(
-    "Missing region keys:",
-    sales["region_key"].isna().sum()
-)
-
-print(
-    "Missing date keys:",
-    sales["date_key"].isna().sum()
-)
-
-
 cursor = conn.cursor()
 
 incremental_load = len(sys.argv) > 1
 
 
-
-# =========================
-# PREPARE FACT DATA
-# =========================
-
-# Remove rows where any required dimension key is missing
-fact_sales = sales.dropna(
-    subset=[
-        "date_key",
-        "customer_key",
-        "product_key",
-        "region_key"
-    ]
-).copy()
-
-print("\nVALID FACT ROWS BEFORE DEDUPLICATION:", len(fact_sales))
-
-
-# Remove exact duplicate fact records
-fact_sales = fact_sales.drop_duplicates(
-    subset=[
-        "order_id",
-        "date_key",
-        "customer_key",
-        "product_key",
-        "region_key",
-        "quantity",
-        "unit_price",
-        "discount",
-        "sales_amount"
-    ]
-).copy()
-
-print("VALID FACT ROWS AFTER DEDUPLICATION:", len(fact_sales))
-
-
 try:
 
+    # =========================
+    # CLEAR FACT TABLE
+    # =========================
+
     if incremental_load:
+
         print("\nIncremental fact load...")
+
     else:
-        print("\nClearing existing fact_sales...")
+
+        print(
+            "\nClearing existing fact_sales..."
+        )
+
         cursor.execute(
             "TRUNCATE TABLE fact_sales RESTART IDENTITY;"
         )
 
+
+    # =====================================================
+    # IMPORTANT FIX:
+    # LOAD DIMENSION TABLES BEFORE LOOKING UP THEIR KEYS
+    # =====================================================
+
     # =========================
-    # LOAD DIMENSION TABLES
+    # LOAD DIM_CUSTOMER
     # =========================
 
+    print("\nLoading dim_customer...")
+
+    customer_inserted = 0
+
     for _, row in customers.iterrows():
+
         cursor.execute(
             """
-            INSERT INTO dim_customer (customer_id, customer_name)
+            INSERT INTO dim_customer (
+                customer_id,
+                customer_name
+            )
             VALUES (%s, %s)
             ON CONFLICT (customer_id) DO NOTHING
             """,
-            (row["customer_id"], row["customer_name"])
+            (
+                row["customer_id"],
+                row["customer_name"]
+            )
         )
 
+        if cursor.rowcount == 1:
+            customer_inserted += 1
+
+    print(
+        "New customers inserted:",
+        customer_inserted
+    )
+
+
+    # =========================
+    # LOAD DIM_PRODUCT
+    # =========================
+
+    print("\nLoading dim_product...")
+
+    product_inserted = 0
+
     for _, row in products.iterrows():
+
         cursor.execute(
             """
-            INSERT INTO dim_product
-            (product_id, product_name, unit_price)
+            INSERT INTO dim_product (
+                product_id,
+                product_name,
+                unit_price
+            )
             VALUES (%s, %s, %s)
             ON CONFLICT (product_id) DO NOTHING
             """,
@@ -585,15 +572,367 @@ try:
             )
         )
 
+        if cursor.rowcount == 1:
+            product_inserted += 1
+
+    print(
+        "New products inserted:",
+        product_inserted
+    )
+
+
+    # =========================
+    # LOAD DIM_REGION
+    # =========================
+
+    print("\nLoading dim_region...")
+
+    region_inserted = 0
+
     for _, row in regions.iterrows():
+
         cursor.execute(
             """
-            INSERT INTO dim_region (region_name)
+            INSERT INTO dim_region (
+                region_name
+            )
             VALUES (%s)
             ON CONFLICT (region_name) DO NOTHING
             """,
-            (row["region_name"],)
+            (
+                row["region_name"],
+            )
         )
+
+        if cursor.rowcount == 1:
+            region_inserted += 1
+
+    print(
+        "New regions inserted:",
+        region_inserted
+    )
+
+
+    # =========================
+    # LOAD DIM_DATE
+    # =========================
+
+    print("\nLoading dim_date...")
+
+    # Convert order dates to proper datetime
+    sales["order_date"] = pd.to_datetime(
+        sales["order_date"],
+        errors="coerce"
+    )
+
+    valid_dates = (
+        sales["order_date"]
+        .dropna()
+        .dt.date
+        .drop_duplicates()
+        .sort_values()
+    )
+
+    date_inserted = 0
+
+    for order_date in valid_dates:
+
+        date_key = int(
+            order_date.strftime("%Y%m%d")
+        )
+
+        day = order_date.day
+        month = order_date.month
+        month_name = order_date.strftime("%B")
+
+        quarter = (
+            f"Q{((month - 1) // 3) + 1}"
+        )
+
+        year = order_date.year
+
+        cursor.execute(
+            """
+            INSERT INTO dim_date (
+                date_key,
+                full_date,
+                day,
+                month,
+                month_name,
+                quarter,
+                year
+            )
+            VALUES (
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s
+            )
+            ON CONFLICT (date_key) DO NOTHING
+            """,
+            (
+                date_key,
+                order_date,
+                day,
+                month,
+                month_name,
+                quarter,
+                year
+            )
+        )
+
+        if cursor.rowcount == 1:
+            date_inserted += 1
+
+    print(
+        "New dates inserted:",
+        date_inserted
+    )
+
+
+    # =====================================================
+    # REFRESH DIMENSION LOOKUPS
+    # =====================================================
+
+    print(
+        "\nRefreshing dimension lookups..."
+    )
+
+
+    # =========================
+    # CUSTOMER LOOKUP
+    # =========================
+
+    customer_lookup = pd.read_sql(
+        """
+        SELECT
+            customer_key,
+            customer_id
+        FROM dim_customer
+        """,
+        conn
+    )
+
+
+    # =========================
+    # PRODUCT LOOKUP
+    # =========================
+
+    product_lookup = pd.read_sql(
+        """
+        SELECT
+            product_key,
+            product_id
+        FROM dim_product
+        """,
+        conn
+    )
+
+
+    # =========================
+    # REGION LOOKUP
+    # =========================
+
+    region_lookup = pd.read_sql(
+        """
+        SELECT
+            region_key,
+            region_name
+        FROM dim_region
+        """,
+        conn
+    )
+
+
+    # =========================
+    # DATE LOOKUP
+    # =========================
+
+    date_lookup = pd.read_sql(
+        """
+        SELECT
+            date_key,
+            full_date
+        FROM dim_date
+        """,
+        conn
+    )
+
+    date_lookup["full_date"] = pd.to_datetime(
+        date_lookup["full_date"],
+        errors="coerce"
+    )
+
+
+    # =====================================================
+    # BUILD FACT LOOKUPS
+    # =====================================================
+
+    sales["order_date"] = pd.to_datetime(
+        sales["order_date"],
+        errors="coerce"
+    ).dt.normalize()
+
+    date_lookup["full_date"] = pd.to_datetime(
+        date_lookup["full_date"],
+        errors="coerce"
+    ).dt.normalize()
+
+
+    # =========================
+    # CUSTOMER KEY LOOKUP
+    # =========================
+
+    sales = sales.merge(
+        customer_lookup,
+        on="customer_id",
+        how="left"
+    )
+
+
+    # =========================
+    # PRODUCT KEY LOOKUP
+    # =========================
+
+    sales = sales.merge(
+        product_lookup,
+        on="product_id",
+        how="left"
+    )
+
+
+    # =========================
+    # REGION KEY LOOKUP
+    # =========================
+
+    sales = sales.merge(
+        region_lookup,
+        left_on="region",
+        right_on="region_name",
+        how="left"
+    )
+
+
+    # =====================================================
+    # VALIDATE RAW FACT ROWS
+    # =====================================================
+
+    invalid_sales = sales[
+        sales["order_date"].isna()
+        | sales["customer_id"].isna()
+        | sales["product_id"].isna()
+        | sales["region"].isna()
+    ].copy()
+
+    print(
+        "\nINVALID FACT ROWS:",
+        len(invalid_sales)
+    )
+
+    if len(invalid_sales) > 0:
+        print("\nInvalid rows:")
+        print(invalid_sales)
+
+
+    # Keep valid business rows
+    sales = sales[
+        sales["order_date"].notna()
+        & sales["customer_id"].notna()
+        & sales["product_id"].notna()
+        & sales["region"].notna()
+    ].copy()
+
+    print(
+        "\nVALID FACT ROWS:",
+        len(sales)
+    )
+
+
+    # =========================
+    # DATE KEY LOOKUP
+    # =========================
+
+    sales = sales.merge(
+        date_lookup,
+        left_on="order_date",
+        right_on="full_date",
+        how="left"
+    )
+
+
+    # =====================================================
+    # FACT LOOKUP VALIDATION
+    # =====================================================
+
+    print("\nFACT LOOKUP VALIDATION")
+    print("----------------------")
+
+    print(
+        "Missing customer keys:",
+        sales["customer_key"].isna().sum()
+    )
+
+    print(
+        "Missing product keys:",
+        sales["product_key"].isna().sum()
+    )
+
+    print(
+        "Missing region keys:",
+        sales["region_key"].isna().sum()
+    )
+
+    print(
+        "Missing date keys:",
+        sales["date_key"].isna().sum()
+    )
+
+
+    # =========================
+    # PREPARE FACT DATA
+    # =========================
+
+    fact_sales = sales.dropna(
+        subset=[
+            "date_key",
+            "customer_key",
+            "product_key",
+            "region_key"
+        ]
+    ).copy()
+
+    print(
+        "\nVALID FACT ROWS BEFORE DEDUPLICATION:",
+        len(fact_sales)
+    )
+
+
+    # =========================
+    # REMOVE EXACT DUPLICATES
+    # =========================
+
+    fact_sales = fact_sales.drop_duplicates(
+        subset=[
+            "order_id",
+            "date_key",
+            "customer_key",
+            "product_key",
+            "region_key",
+            "quantity",
+            "unit_price",
+            "discount",
+            "sales_amount"
+        ]
+    ).copy()
+
+    print(
+        "VALID FACT ROWS AFTER DEDUPLICATION:",
+        len(fact_sales)
+    )
+
 
     # =========================
     # LOAD FACT TABLE
@@ -613,7 +952,16 @@ try:
         discount,
         sales_amount
     )
-    SELECT %s, %s, %s, %s, %s, %s, %s, %s, %s
+    SELECT
+        %s,
+        %s,
+        %s,
+        %s,
+        %s,
+        %s,
+        %s,
+        %s,
+        %s
     WHERE NOT EXISTS (
         SELECT 1
         FROM fact_sales
@@ -631,6 +979,7 @@ try:
 
     inserted = 0
     skipped = 0
+
 
     for _, row in fact_sales.iterrows():
 
@@ -656,23 +1005,44 @@ try:
         else:
             skipped += 1
 
-    # IMPORTANT: commit AFTER the entire loop
+
+    # =====================================================
+    # COMMIT ONLY AFTER ENTIRE ETL COMPLETES SUCCESSFULLY
+    # =====================================================
+
     conn.commit()
 
     print("\nFACT LOAD COMPLETE")
+    print("------------------")
     print("Rows inserted:", inserted)
     print("Rows skipped:", skipped)
 
-#    if len(fact_sales) > 0 and inserted == 0:
-#        raise Exception(
-#            "ETL loaded 0 new rows into fact_sales."
-#        )
+    print("\nDIMENSION LOAD COMPLETE")
+    print("-----------------------")
+    print(
+        "Customers inserted:",
+        customer_inserted
+    )
+    print(
+        "Products inserted:",
+        product_inserted
+    )
+    print(
+        "Regions inserted:",
+        region_inserted
+    )
+    print(
+        "Dates inserted:",
+        date_inserted
+    )
+
 
 except Exception as e:
 
     conn.rollback()
 
     print("\nETL FAILED")
+    print("----------")
     print("Error:", e)
     print("Database changes rolled back.")
 
@@ -682,11 +1052,30 @@ except Exception as e:
     raise
 
 
-with open(PROCESSED_FILE, "a") as file:
-    for filename in files:
-        file.write(filename + "\n")
+# =====================================================
+# UPDATE PROCESSED FILES ONLY AFTER SUCCESSFUL COMMIT
+# =====================================================
 
-print("\nPROCESSED FILES UPDATED")
+with open(
+    PROCESSED_FILE,
+    "a"
+) as file:
+
+    for filename in files:
+        file.write(
+            filename + "\n"
+        )
+
+print(
+    "\nPROCESSED FILES UPDATED"
+)
+
+
+# =========================
+# CLOSE DATABASE
+# =========================
 
 cursor.close()
 conn.close()
+
+print("\nETL COMPLETED SUCCESSFULLY.")

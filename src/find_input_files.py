@@ -1,7 +1,9 @@
 from pathlib import Path
 
-RAW_DATA = Path("data/raw")
-PROCESSED_FILE = Path("data/processed_files.txt")
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+RAW_DATA = PROJECT_ROOT / "data" / "raw"
+PROCESSED_FILE = PROJECT_ROOT / "data" / "processed_files.txt"
 
 files = sorted(
     file.name

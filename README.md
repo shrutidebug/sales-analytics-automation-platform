@@ -286,6 +286,12 @@ Provides time-based sales trends and transaction analysis.
 
 Power BI uses PostgreSQL as the data source and is refreshed by the UiPath workflow.
 
+The `.pbix` file is intentionally not included in the GitHub repository because it is a binary project artifact.
+
+The completed dashboard is documented through screenshots in `docs/screenshots/`.
+
+To recreate the dashboard, connect Power BI Desktop to the PostgreSQL `sales_analytics` database and build the report using the star schema described above.
+
 ---
 
 # 🤖 UiPath Automation
@@ -443,6 +449,10 @@ Sales Analytics & Automation Platform/
 │
 ├── reports/
 │
+├── sql/
+    ├── analysis.sql
+    ├── schema.sql
+│
 ├── src/
 │   ├── generate_data.py
 │   ├── validate_raw_data.py
@@ -518,9 +528,8 @@ Install:
 ## 1. Clone the Project
 
 ```bash
-git clone <your-repository-url>
-cd "Sales Analytics & Automation Platform"
-```
+git clone [https://github.com/shrutidebug/sales-analytics-automation-platform.git](https://github.com/shrutidebug/sales-analytics-automation-platform)
+cd sales-analytics-automation-platform```
 
 ## 2. Create a Python Virtual Environment
 

@@ -1,6 +1,18 @@
+import os
 import subprocess
 import sys
 import re
+from pathlib import Path
+
+# =========================
+# PROJECT PATH
+# =========================
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+FIND_FILES_SCRIPT = PROJECT_ROOT / "src" / "find_input_files.py"
+LOAD_DIMENSIONS_SCRIPT = PROJECT_ROOT / "src" / "load_dimensions.py"
+
 
 print("\n==============================")
 print("   SALES ETL PIPELINE START")
@@ -11,7 +23,7 @@ print("==============================")
 # =========================
 
 result = subprocess.run(
-    [sys.executable, "src/find_input_files.py"],
+    [sys.executable, str(FIND_FILES_SCRIPT)],
     capture_output=True,
     text=True
 )
@@ -48,7 +60,7 @@ for file in new_files:
 print("\nStarting database load...")
 
 load_result = subprocess.run(
-    [sys.executable, "src/load_dimensions.py", *new_files]
+    [sys.executable, str(LOAD_DIMENSIONS_SCRIPT), *new_files]
 )
 
 if load_result.returncode != 0:

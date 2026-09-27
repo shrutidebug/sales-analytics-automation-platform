@@ -114,15 +114,22 @@
       <AssemblyReference>UiPath.Mail.Activities.Design</AssemblyReference>
       <AssemblyReference>System.Memory.Data</AssemblyReference>
       <AssemblyReference>System.Runtime.InteropServices</AssemblyReference>
+      <AssemblyReference>System.Linq.Async.Queryable</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
   <sap:WorkflowViewStateService.ViewState>
     <scg:Dictionary x:TypeArguments="x:String, x:Object">
-      <x:Boolean x:Key="ShouldCollapseAll">True</x:Boolean>
+      <x:Boolean x:Key="ShouldCollapseAll">False</x:Boolean>
+      <x:Boolean x:Key="ShouldExpandAll">True</x:Boolean>
     </scg:Dictionary>
   </sap:WorkflowViewStateService.ViewState>
-  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="521.6,2613.6" sap2010:WorkflowViewState.IdRef="Sequence_10">
+  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="1177.2,2021.6" sap2010:WorkflowViewState.IdRef="Sequence_10">
     <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="projectRoot">
+        <Variable.Default>
+          <Literal x:TypeArguments="x:String">D:\Sales Analytics &amp; Automation Platform</Literal>
+        </Variable.Default>
+      </Variable>
       <Variable x:TypeArguments="x:String" Name="reportRecipients" />
       <Variable x:TypeArguments="s:String[]" Name="newfiles" />
       <Variable x:TypeArguments="s:String[]" Name="processedfiles" />
@@ -134,24 +141,24 @@
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <Assign sap:VirtualizedContainerService.HintSize="521.6,56.8" sap2010:WorkflowViewState.IdRef="Assign_1">
+    <Assign sap:VirtualizedContainerService.HintSize="486.4,174.4" sap2010:WorkflowViewState.IdRef="Assign_1">
       <Assign.To>
         <OutArgument x:TypeArguments="s:String[]">[files]</OutArgument>
       </Assign.To>
       <Assign.Value>
         <InArgument x:TypeArguments="s:String[]" xml:space="preserve">[Directory.GetFiles(
-    "D:\Sales Analytics &amp; Automation Platform\data\raw",
+    projectRoot + "\data\raw",
     "*.xlsx"
 ).Where(Function(f) Not System.IO.Path.GetFileName(f).StartsWith("~$")).ToArray()]</InArgument>
       </Assign.Value>
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
-          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           <x:Boolean x:Key="IsPinned">False</x:Boolean>
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
     </Assign>
-    <ui:AppendLine File="{x:Null}" DisplayName="Append Line" FileName="D:\Sales Analytics &amp; Automation Platform\logs\automation_log.txt" sap:VirtualizedContainerService.HintSize="521.6,56.8" sap2010:WorkflowViewState.IdRef="AppendLine_1" Text="[&quot;Automation Started: &quot; + DateTime.Now.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;)]" UseDefaultEncoding="False">
+    <ui:AppendLine File="{x:Null}" DisplayName="Append Line" FileName="[projectRoot + &quot;\logs\automation_log.txt&quot;]" sap:VirtualizedContainerService.HintSize="486.4,166.4" sap2010:WorkflowViewState.IdRef="AppendLine_1" Text="[&quot;Automation Started: &quot; + DateTime.Now.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;)]" UseDefaultEncoding="False">
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
           <x:Boolean x:Key="IsExpanded">False</x:Boolean>
@@ -159,29 +166,29 @@
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
     </ui:AppendLine>
-    <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="521.6,56.8" sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="[&quot;Files Found: &quot; + files.Length.ToString]">
+    <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="486.4,56.8" sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="[&quot;Files Found: &quot; + files.Length.ToString]">
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
           <x:Boolean x:Key="IsExpanded">False</x:Boolean>
-          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          <x:Boolean x:Key="IsPinned">True</x:Boolean>
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
     </WriteLine>
-    <Assign sap:VirtualizedContainerService.HintSize="521.6,56.8" sap2010:WorkflowViewState.IdRef="Assign_2">
+    <Assign sap:VirtualizedContainerService.HintSize="486.4,56.8" sap2010:WorkflowViewState.IdRef="Assign_2">
       <Assign.To>
         <OutArgument x:TypeArguments="s:String[]">[processedfiles]</OutArgument>
       </Assign.To>
       <Assign.Value>
-        <InArgument x:TypeArguments="s:String[]">[File.ReadAllLines("D:\Sales Analytics &amp; Automation Platform\data\processed_files.txt")]</InArgument>
+        <InArgument x:TypeArguments="s:String[]">[File.ReadAllLines(projectRoot + "\data\processed_files.txt")]</InArgument>
       </Assign.Value>
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
           <x:Boolean x:Key="IsExpanded">False</x:Boolean>
-          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          <x:Boolean x:Key="IsPinned">True</x:Boolean>
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
     </Assign>
-    <Assign sap:VirtualizedContainerService.HintSize="521.6,56.8" sap2010:WorkflowViewState.IdRef="Assign_3">
+    <Assign sap:VirtualizedContainerService.HintSize="486.4,56.8" sap2010:WorkflowViewState.IdRef="Assign_3">
       <Assign.To>
         <OutArgument x:TypeArguments="s:String[]">[newfiles]</OutArgument>
       </Assign.To>
@@ -191,42 +198,42 @@
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
           <x:Boolean x:Key="IsExpanded">False</x:Boolean>
-          <x:Boolean x:Key="IsPinned">False</x:Boolean>
-        </scg:Dictionary>
-      </sap:WorkflowViewStateService.ViewState>
-    </Assign>
-    <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="521.6,56.8" sap2010:WorkflowViewState.IdRef="WriteLine_2" Text="[&quot;New Files: &quot; + newfiles.Length.ToString]">
-      <sap:WorkflowViewStateService.ViewState>
-        <scg:Dictionary x:TypeArguments="x:String, x:Object">
-          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
-          <x:Boolean x:Key="IsPinned">False</x:Boolean>
-        </scg:Dictionary>
-      </sap:WorkflowViewStateService.ViewState>
-    </WriteLine>
-    <If Condition="[newfiles.Length&gt;0]" sap:VirtualizedContainerService.HintSize="521.6,2201.6" sap2010:WorkflowViewState.IdRef="If_1">
-      <sap:WorkflowViewStateService.ViewState>
-        <scg:Dictionary x:TypeArguments="x:String, x:Object">
-          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           <x:Boolean x:Key="IsPinned">True</x:Boolean>
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
+    </Assign>
+    <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="486.4,56.8" sap2010:WorkflowViewState.IdRef="WriteLine_2" Text="[&quot;New Files: &quot; + newfiles.Length.ToString]">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+          <x:Boolean x:Key="IsPinned">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+    </WriteLine>
+    <If Condition="[newfiles.Length&gt;0]" sap:VirtualizedContainerService.HintSize="486.4,1316.8" sap2010:WorkflowViewState.IdRef="If_1">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
       <If.Then>
-        <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="520,2038.4" sap2010:WorkflowViewState.IdRef="Sequence_2">
+        <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="484.8,960.8" sap2010:WorkflowViewState.IdRef="Sequence_2">
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-              <x:Boolean x:Key="IsPinned">True</x:Boolean>
+              <x:Boolean x:Key="IsPinned">False</x:Boolean>
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
-          <ui:AppendLine File="{x:Null}" DisplayName="Append Line" FileName="D:\Sales Analytics &amp; Automation Platform\logs\automation_log.txt" sap:VirtualizedContainerService.HintSize="486.4,56.8" sap2010:WorkflowViewState.IdRef="AppendLine_2" Text="[&quot;New file detected. Starting Python ETL: &quot; + DateTime.Now.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;)]" UseDefaultEncoding="False">
+          <ui:AppendLine File="{x:Null}" DisplayName="Append Line" FileName="[projectRoot + &quot;\logs\automation_log.txt&quot;]" sap:VirtualizedContainerService.HintSize="451.2,56.8" sap2010:WorkflowViewState.IdRef="AppendLine_2" Text="[&quot;New file detected. Starting Python ETL: &quot; + DateTime.Now.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;)]" UseDefaultEncoding="False">
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                 <x:Boolean x:Key="IsExpanded">False</x:Boolean>
-                <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                <x:Boolean x:Key="IsPinned">True</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
           </ui:AppendLine>
-          <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="486.4,56.8" sap2010:WorkflowViewState.IdRef="WriteLine_4" Text="New files Detected. Starting Python ETL">
+          <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="451.2,122.4" sap2010:WorkflowViewState.IdRef="WriteLine_4" Text="New files Detected. Starting Python ETL">
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                 <x:Boolean x:Key="IsExpanded">False</x:Boolean>
@@ -234,22 +241,22 @@
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
           </WriteLine>
-          <TryCatch DisplayName="Try Catch" sap:VirtualizedContainerService.HintSize="486.4,1816.8" sap2010:WorkflowViewState.IdRef="TryCatch_2">
+          <TryCatch DisplayName="Try Catch" sap:VirtualizedContainerService.HintSize="451.2,608" sap2010:WorkflowViewState.IdRef="TryCatch_2">
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                <x:Boolean x:Key="IsPinned">True</x:Boolean>
+                <x:Boolean x:Key="IsPinned">False</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
             <TryCatch.Try>
-              <Sequence DisplayName="Try" sap:VirtualizedContainerService.HintSize="484.8,1626.4" sap2010:WorkflowViewState.IdRef="Sequence_7">
+              <Sequence DisplayName="Try" sap:VirtualizedContainerService.HintSize="449.6,24.8" sap2010:WorkflowViewState.IdRef="Sequence_7">
                 <sap:WorkflowViewStateService.ViewState>
                   <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    <x:Boolean x:Key="IsExpanded">False</x:Boolean>
                     <x:Boolean x:Key="IsPinned">True</x:Boolean>
                   </scg:Dictionary>
                 </sap:WorkflowViewStateService.ViewState>
-                <ui:InvokeCode Code="Dim psi As New System.Diagnostics.ProcessStartInfo()&#xA;&#xA;psi.FileName = &quot;D:\Sales Analytics &amp; Automation Platform\.venv\Scripts\python.exe&quot;&#xA;psi.Arguments = &quot;&quot;&quot;D:\Sales Analytics &amp; Automation Platform\src\run_etl.py&quot;&quot;&quot;&#xA;psi.WorkingDirectory = &quot;D:\Sales Analytics &amp; Automation Platform&quot;&#xA;&#xA;psi.UseShellExecute = False&#xA;psi.CreateNoWindow = True&#xA;psi.RedirectStandardOutput = True&#xA;psi.RedirectStandardError = True&#xA;&#xA;Dim pythonProcess As System.Diagnostics.Process = System.Diagnostics.Process.Start(psi)&#xA;&#xA;Dim output As String = pythonProcess.StandardOutput.ReadToEnd()&#xA;Dim errorOutput As String = pythonProcess.StandardError.ReadToEnd()&#xA;&#xA;pythonProcess.WaitForExit()&#xA;&#xA;System.IO.File.WriteAllText(&#xA;    &quot;D:\Sales Analytics &amp; Automation Platform\logs\python_etl_output.txt&quot;,&#xA;    &quot;EXIT CODE: &quot; + pythonProcess.ExitCode.ToString + Environment.NewLine +&#xA;    &quot;----- OUTPUT -----&quot; + Environment.NewLine +&#xA;    output + Environment.NewLine +&#xA;    &quot;----- ERRORS -----&quot; + Environment.NewLine +&#xA;    errorOutput&#xA;)&#xA;&#xA;If pythonProcess.ExitCode &lt;&gt; 0 Then&#xA;    Throw New Exception(&quot;Python ETL failed. Check python_etl_output.txt&quot;)&#xA;End If" ContinueOnError="False" DisplayName="Invoke Code" sap:VirtualizedContainerService.HintSize="451.2,56.8" sap2010:WorkflowViewState.IdRef="InvokeCode_2">
+                <ui:InvokeCode Code="Dim psi As New System.Diagnostics.ProcessStartInfo()&#xA;&#xA;psi.FileName = projectRoot + &quot;\.venv\Scripts\python.exe&quot;&#xA;psi.Arguments = &quot;&quot;&quot;&quot; + projectRoot + &quot;\src\run_etl.py&quot;+ &quot;&quot;&quot;&quot;&#xA;psi.WorkingDirectory =  projectRoot&#xA;&#xA;psi.UseShellExecute = False&#xA;psi.CreateNoWindow = True&#xA;psi.RedirectStandardOutput = True&#xA;psi.RedirectStandardError = True&#xA;&#xA;Dim pythonProcess As System.Diagnostics.Process = System.Diagnostics.Process.Start(psi)&#xA;&#xA;Dim output As String = pythonProcess.StandardOutput.ReadToEnd()&#xA;Dim errorOutput As String = pythonProcess.StandardError.ReadToEnd()&#xA;&#xA;pythonProcess.WaitForExit()&#xA;&#xA;System.IO.File.WriteAllText(&#xA;     projectRoot + &quot;\logs\python_etl_output.txt&quot;,&#xA;    &quot;EXIT CODE: &quot; + pythonProcess.ExitCode.ToString + Environment.NewLine +&#xA;    &quot;----- OUTPUT -----&quot; + Environment.NewLine +&#xA;    output + Environment.NewLine +&#xA;    &quot;----- ERRORS -----&quot; + Environment.NewLine +&#xA;    errorOutput&#xA;)&#xA;&#xA;If pythonProcess.ExitCode &lt;&gt; 0 Then&#xA;    Throw New Exception(&quot;Python ETL failed. Check python_etl_output.txt&quot;)&#xA;End If" ContinueOnError="False" DisplayName="Invoke Code" sap:VirtualizedContainerService.HintSize="451.2,400.8" sap2010:WorkflowViewState.IdRef="InvokeCode_2">
                   <ui:InvokeCode.Arguments>
                     <scg:Dictionary x:TypeArguments="x:String, Argument" />
                   </ui:InvokeCode.Arguments>
@@ -260,37 +267,37 @@
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
                 </ui:InvokeCode>
-                <ui:AppendLine File="{x:Null}" DisplayName="Append Line" FileName="D:\Sales Analytics &amp; Automation Platform\logs\automation_log.txt" sap:VirtualizedContainerService.HintSize="451.2,56.8" sap2010:WorkflowViewState.IdRef="AppendLine_4" Text="[&quot;Python ETL completed successfully...&quot; + DateTime.Now.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;)]" UseDefaultEncoding="False" />
-                <uix:NApplicationCard AttachMode="ByInstance" DisplayName="Use Application" HealingAgentBehavior="Job" sap:VirtualizedContainerService.HintSize="451.2,1452.8" sap2010:WorkflowViewState.IdRef="NApplicationCard_1" ScopeGuid="ace51d00-b386-42b5-96f8-d23cad4593af" Version="V2">
+                <ui:AppendLine File="{x:Null}" DisplayName="Append Line" FileName="[projectRoot + &quot;\logs\automation_log.txt&quot;]" sap:VirtualizedContainerService.HintSize="451.2,166.4" sap2010:WorkflowViewState.IdRef="AppendLine_4" Text="[&quot;Python ETL completed successfully...&quot; + DateTime.Now.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;)]" UseDefaultEncoding="False" />
+                <uix:NApplicationCard AttachMode="ByInstance" DisplayName="Use Application" HealingAgentBehavior="Job" sap:VirtualizedContainerService.HintSize="451.2,2606.4" sap2010:WorkflowViewState.IdRef="NApplicationCard_1" ScopeGuid="ace51d00-b386-42b5-96f8-d23cad4593af" Version="V2">
                   <uix:NApplicationCard.Body>
                     <ActivityAction x:TypeArguments="x:Object">
                       <ActivityAction.Argument>
                         <DelegateInArgument x:TypeArguments="x:Object" Name="WSSessionData" />
                       </ActivityAction.Argument>
-                      <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="449.6,1206.4" sap2010:WorkflowViewState.IdRef="Sequence_1">
+                      <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="449.6,2360" sap2010:WorkflowViewState.IdRef="Sequence_1">
                         <sap:WorkflowViewStateService.ViewState>
                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
                             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                            <x:Boolean x:Key="IsPinned">True</x:Boolean>
+                            <x:Boolean x:Key="IsPinned">False</x:Boolean>
                           </scg:Dictionary>
                         </sap:WorkflowViewStateService.ViewState>
-                        <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Refresh(1)'" HealingAgentBehavior="SameAsCard" sap:VirtualizedContainerService.HintSize="416,56.8" sap2010:WorkflowViewState.IdRef="NClick_18" InteractionMode="SameAsCard" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="ace51d00-b386-42b5-96f8-d23cad4593af" Version="V5">
+                        <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Refresh(1)'" HealingAgentBehavior="SameAsCard" sap:VirtualizedContainerService.HintSize="416,193.6" sap2010:WorkflowViewState.IdRef="NClick_18" InteractionMode="SameAsCard" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="ace51d00-b386-42b5-96f8-d23cad4593af" Version="V5">
                           <uix:NClick.Target>
                             <uix:TargetAnchorable ContentHash="bT0RyAzab0atbH787t5FgA" DesignTimeRectangle="252, 104, 57, 17" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl id='id__987' tag='SPAN' /&gt;" Guid="a8da5dbb-850e-4882-b641-2e6b3f394e50" InformativeScreenshot="e96ba77dafe346a0f231bffb40e38c18.jpg" Reference="1J0jUkom50ut63ERptadsg/0pjkxSY0M0y0uQPn7skMJw" ScopeSelectorArgument="&lt;html app='pbidesktop.exe' url='https://ms-pbi.pbi.microsoft.com/minerva/reportView.html' /&gt;" SearchSteps="Selector" Version="V6" WaitForReadyArgument="Interactive" />
                           </uix:NClick.Target>
                         </uix:NClick>
-                        <Delay Duration="00:00:10" sap:VirtualizedContainerService.HintSize="416,56.8" sap2010:WorkflowViewState.IdRef="Delay_1" />
-                        <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'File'" HealingAgentBehavior="SameAsCard" sap:VirtualizedContainerService.HintSize="416,56.8" sap2010:WorkflowViewState.IdRef="NClick_19" InteractionMode="SameAsCard" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="ace51d00-b386-42b5-96f8-d23cad4593af" Version="V5">
+                        <Delay Duration="00:00:10" sap:VirtualizedContainerService.HintSize="416,122.4" sap2010:WorkflowViewState.IdRef="Delay_1" />
+                        <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'File'" HealingAgentBehavior="SameAsCard" sap:VirtualizedContainerService.HintSize="416,193.6" sap2010:WorkflowViewState.IdRef="NClick_19" InteractionMode="SameAsCard" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="ace51d00-b386-42b5-96f8-d23cad4593af" Version="V5">
                           <uix:NClick.Target>
                             <uix:TargetAnchorable ContentHash="35V4nX-HcEqqmlKTKY9gVQ" DesignTimeRectangle="28, 53, 26, 18" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl id='id__30' tag='SPAN' /&gt;" Guid="4df17c3e-1f84-49dc-895c-213abf35a443" InformativeScreenshot="e4d7f024926a61705ba5a0dc440203b4.jpg" Reference="1J0jUkom50ut63ERptadsg/Bp4g2r22tUCs-avQGnwbKQ" ScopeSelectorArgument="&lt;html app='pbidesktop.exe' url='https://ms-pbi.pbi.microsoft.com/minerva/reportView.html' /&gt;" SearchSteps="Selector" Version="V6" WaitForReadyArgument="Interactive" />
                           </uix:NClick.Target>
                         </uix:NClick>
-                        <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Export'" HealingAgentBehavior="SameAsCard" sap:VirtualizedContainerService.HintSize="416,56.8" sap2010:WorkflowViewState.IdRef="NClick_16" InteractionMode="SameAsCard" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="ace51d00-b386-42b5-96f8-d23cad4593af" Version="V5">
+                        <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Export'" HealingAgentBehavior="SameAsCard" sap:VirtualizedContainerService.HintSize="416,193.6" sap2010:WorkflowViewState.IdRef="NClick_16" InteractionMode="SameAsCard" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="ace51d00-b386-42b5-96f8-d23cad4593af" Version="V5">
                           <uix:NClick.Target>
                             <uix:TargetAnchorable ContentHash="akSDOdbGmkKkvzUYQOsluQ" DesignTimeRectangle="0, 485, 250, 55" ElementType="Text" ElementVisibilityArgument="Interactive" FullSelectorArgument="&lt;webctrl aaname=' Export ' aria-role='tab' class='tabHeader' tag='DIV' /&gt;" Guid="264f8ef3-078a-4881-aa73-5fbfb062e2f5" InformativeScreenshot="582019b7bb6e03a07374bff5f2c167b1.jpg" Reference="1J0jUkom50ut63ERptadsg/08gJb88kq0y80CUI4X3CHQ" ScopeSelectorArgument="&lt;html app='pbidesktop.exe' url='https://ms-pbi.pbi.microsoft.com/minerva/reportView.html' /&gt;" SearchSteps="Selector" Version="V6" WaitForReadyArgument="Interactive" />
                           </uix:NClick.Target>
                         </uix:NClick>
-                        <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Export to PDF'" HealingAgentBehavior="SameAsCard" sap:VirtualizedContainerService.HintSize="416,56.8" sap2010:WorkflowViewState.IdRef="NClick_17" InteractionMode="SameAsCard" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="ace51d00-b386-42b5-96f8-d23cad4593af" Version="V5">
+                        <uix:NClick ActivateBefore="True" ClickType="Single" DisplayName="Click 'Export to PDF'" HealingAgentBehavior="SameAsCard" sap:VirtualizedContainerService.HintSize="416,193.6" sap2010:WorkflowViewState.IdRef="NClick_17" InteractionMode="SameAsCard" KeyModifiers="None" MouseButton="Left" ScopeIdentifier="ace51d00-b386-42b5-96f8-d23cad4593af" Version="V5">
                           <uix:NClick.Target>
                             <uix:TargetAnchorable ContentHash="JtYX7NUrVU-PhK2-TZjtJg" DesignTimeRectangle="341, 264, 136, 32" ElementType="Text" ElementVisibilityArgument="Interactive" FuzzySelectorArgument="&lt;webctrl aaname='Export to PDF ' class='menuItemName' tag='DIV' type='' matching:aaname='fuzzy' fuzzylevel:aaname='0.0' matching:class='fuzzy' fuzzylevel:class='0.0' check:text='Export to PDF' /&gt;" Guid="bea28e81-061f-47cf-bff3-41bcd847eaad" InformativeScreenshot="da9160faaa1ec5b37fc6795d6985bf7b.jpg" Reference="1J0jUkom50ut63ERptadsg/w9cYg0sgpE6x-HebMZpSYw" ScopeSelectorArgument="&lt;html app='pbidesktop.exe' url='https://ms-pbi.pbi.microsoft.com/minerva/reportView.html' /&gt;" SearchSteps="FuzzySelector" Version="V6" WaitForReadyArgument="Interactive">
                               <uix:TargetAnchorable.Anchors>
@@ -301,8 +308,8 @@
                             </uix:TargetAnchorable>
                           </uix:NClick.Target>
                         </uix:NClick>
-                        <Delay Duration="00:00:20" sap:VirtualizedContainerService.HintSize="416,56.8" sap2010:WorkflowViewState.IdRef="Delay_2" />
-                        <ui:InvokeCode Code="Dim tempFolder As String =&#xA;    Path.Combine(&#xA;        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),&#xA;        &quot;Temp\Power BI Desktop&quot;&#xA;    )&#xA;&#xA;Dim reportFolder As String =&#xA;    &quot;D:\Sales Analytics &amp; Automation Platform\reports&quot;&#xA;&#xA;If Not Directory.Exists(reportFolder) Then&#xA;    Directory.CreateDirectory(reportFolder)&#xA;End If&#xA;&#xA;Dim pdfFiles As String() =&#xA;    Directory.GetFiles(&#xA;        tempFolder,&#xA;        &quot;*.pdf&quot;,&#xA;        SearchOption.AllDirectories&#xA;    )&#xA;&#xA;If pdfFiles.Length = 0 Then&#xA;    Throw New Exception(&quot;No PDF file found in Power BI temporary folder.&quot;)&#xA;End If&#xA;&#xA;Dim latestPdf As String =&#xA;    pdfFiles.OrderByDescending(&#xA;        Function(f) File.GetLastWriteTime(f)&#xA;    ).First()&#xA;&#xA;Dim outputFile As String =&#xA;    Path.Combine(&#xA;        reportFolder,&#xA;        &quot;Sales_Analytics_Report_&quot; +&#xA;        DateTime.Now.ToString(&quot;yyyy-MM-dd_HHmmss&quot;) +&#xA;        &quot;.pdf&quot;&#xA;    )&#xA;&#xA;File.Copy(latestPdf, outputFile, True)&#xA;pdfPath = outputFile" ContinueOnError="True" DisplayName="Invoke Code" sap:VirtualizedContainerService.HintSize="416,56.8" sap2010:WorkflowViewState.IdRef="InvokeCode_3">
+                        <Delay Duration="00:00:20" sap:VirtualizedContainerService.HintSize="416,122.4" sap2010:WorkflowViewState.IdRef="Delay_2" />
+                        <ui:InvokeCode Code="Dim tempFolder As String =&#xA;    Path.Combine(&#xA;        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),&#xA;        &quot;Temp\Power BI Desktop&quot;&#xA;    )&#xA;&#xA;Dim reportFolder As String =&#xA;     projectRoot + &quot;\reports&quot;&#xA;&#xA;If Not Directory.Exists(reportFolder) Then&#xA;    Directory.CreateDirectory(reportFolder)&#xA;End If&#xA;&#xA;Dim pdfFiles As String() =&#xA;    Directory.GetFiles(&#xA;        tempFolder,&#xA;        &quot;*.pdf&quot;,&#xA;        SearchOption.AllDirectories&#xA;    )&#xA;&#xA;If pdfFiles.Length = 0 Then&#xA;    Throw New Exception(&quot;No PDF file found in Power BI temporary folder.&quot;)&#xA;End If&#xA;&#xA;Dim latestPdf As String =&#xA;    pdfFiles.OrderByDescending(&#xA;        Function(f) File.GetLastWriteTime(f)&#xA;    ).First()&#xA;&#xA;Dim outputFile As String =&#xA;    Path.Combine(&#xA;        reportFolder,&#xA;        &quot;Sales_Analytics_Report_&quot; +&#xA;        DateTime.Now.ToString(&quot;yyyy-MM-dd_HHmmss&quot;) +&#xA;        &quot;.pdf&quot;&#xA;    )&#xA;&#xA;File.Copy(latestPdf, outputFile, True)&#xA;pdfPath = outputFile" ContinueOnError="True" DisplayName="Invoke Code" sap:VirtualizedContainerService.HintSize="416,400.8" sap2010:WorkflowViewState.IdRef="InvokeCode_3">
                           <ui:InvokeCode.Arguments>
                             <OutArgument x:TypeArguments="x:String" x:Key="pdfPath">[pdfPath]</OutArgument>
                           </ui:InvokeCode.Arguments>
@@ -322,7 +329,7 @@
                           </Assign.Value>
                           <sap:WorkflowViewStateService.ViewState>
                             <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                              <x:Boolean x:Key="IsPinned">True</x:Boolean>
+                              <x:Boolean x:Key="IsPinned">False</x:Boolean>
                             </scg:Dictionary>
                           </sap:WorkflowViewStateService.ViewState>
                         </Assign>
@@ -348,12 +355,12 @@
                           </ui:SendMail.Files>
                           <sap:WorkflowViewStateService.ViewState>
                             <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                              <x:Boolean x:Key="IsPinned">True</x:Boolean>
+                              <x:Boolean x:Key="IsPinned">False</x:Boolean>
                             </scg:Dictionary>
                           </sap:WorkflowViewStateService.ViewState>
                         </ui:SendMail>
-                        <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="416,56.8" sap2010:WorkflowViewState.IdRef="WriteLine_8" Text="[&quot;PDF being emailed: &quot; + pdfPath]" />
-                        <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="416,48" sap2010:WorkflowViewState.IdRef="WriteLine_9" Text="[&quot;PDF size&quot; + New System.IO.FileInfo(pdfPath).Length.ToString + &quot;bytes&quot;]" />
+                        <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="416,122.4" sap2010:WorkflowViewState.IdRef="WriteLine_8" Text="[&quot;PDF being emailed: &quot; + pdfPath]" />
+                        <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="416,113.6" sap2010:WorkflowViewState.IdRef="WriteLine_9" Text="[&quot;PDF size&quot; + New System.IO.FileInfo(pdfPath).Length.ToString + &quot;bytes&quot;]" />
                       </Sequence>
                     </ActivityAction>
                   </uix:NApplicationCard.Body>
@@ -376,7 +383,7 @@
                   </uix:NApplicationCard.TargetApp>
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                      <x:Boolean x:Key="IsPinned">True</x:Boolean>
+                      <x:Boolean x:Key="IsPinned">False</x:Boolean>
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
                 </uix:NApplicationCard>
@@ -388,7 +395,7 @@
                   <ActivityAction.Argument>
                     <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
                   </ActivityAction.Argument>
-                  <Sequence DisplayName="Catch" sap:VirtualizedContainerService.HintSize="484.8,24.8" sap2010:WorkflowViewState.IdRef="Sequence_8">
+                  <Sequence DisplayName="Catch" sap:VirtualizedContainerService.HintSize="449.6,352.8" sap2010:WorkflowViewState.IdRef="Sequence_8">
                     <Sequence.Variables>
                       <Variable x:TypeArguments="s:Exception" Name="ErrorDetail" />
                     </Sequence.Variables>
@@ -398,14 +405,15 @@
                         <x:Boolean x:Key="IsPinned">False</x:Boolean>
                       </scg:Dictionary>
                     </sap:WorkflowViewStateService.ViewState>
-                    <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="451.2,122.4" sap2010:WorkflowViewState.IdRef="WriteLine_6" Text="Python ETL FAILED: " />
-                    <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="451.2,113.6" sap2010:WorkflowViewState.IdRef="WriteLine_7" Text="Check python_etl_output.txt for details." />
+                    <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="416,122.4" sap2010:WorkflowViewState.IdRef="WriteLine_6" Text="[&quot;Python ETL FAILED: &quot; + exception.Message]" />
+                    <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="416,122.4" sap2010:WorkflowViewState.IdRef="WriteLine_7" Text="Check python_etl_output.txt for details." />
+                    <Rethrow sap:VirtualizedContainerService.HintSize="416,48" sap2010:WorkflowViewState.IdRef="Rethrow_1" />
                   </Sequence>
                 </ActivityAction>
               </Catch>
             </TryCatch.Catches>
             <TryCatch.Finally>
-              <Sequence DisplayName="Finally" sap:VirtualizedContainerService.HintSize="484.8,24.8" sap2010:WorkflowViewState.IdRef="Sequence_9">
+              <Sequence DisplayName="Finally" sap:VirtualizedContainerService.HintSize="449.6,89.6" sap2010:WorkflowViewState.IdRef="Sequence_9">
                 <sap:WorkflowViewStateService.ViewState>
                   <scg:Dictionary x:TypeArguments="x:String, x:Object">
                     <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -414,7 +422,7 @@
               </Sequence>
             </TryCatch.Finally>
           </TryCatch>
-          <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="486.4,48" sap2010:WorkflowViewState.IdRef="WriteLine_5" Text="Python ETL Finished.">
+          <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="451.2,113.6" sap2010:WorkflowViewState.IdRef="WriteLine_5" Text="Python ETL Finished.">
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -425,16 +433,16 @@
         </Sequence>
       </If.Then>
       <If.Else>
-        <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="520,24.8" sap2010:WorkflowViewState.IdRef="Sequence_3">
+        <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="484.8,217.6" sap2010:WorkflowViewState.IdRef="Sequence_3">
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
-          <ui:AppendLine File="{x:Null}" DisplayName="Append Line" FileName="D:\Sales Analytics &amp; Automation Platform\logs\automation_log.txt" sap:VirtualizedContainerService.HintSize="486.4,157.6" sap2010:WorkflowViewState.IdRef="AppendLine_3" Text="[&quot;No new files found: &quot; + DateTime.Now.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;)]" UseDefaultEncoding="False" />
+          <ui:AppendLine File="{x:Null}" DisplayName="Append Line" FileName="[projectRoot + &quot;\logs\automation_log.txt&quot;]" sap:VirtualizedContainerService.HintSize="451.2,157.6" sap2010:WorkflowViewState.IdRef="AppendLine_3" Text="[&quot;No new files found: &quot; + DateTime.Now.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;)]" UseDefaultEncoding="False" />
         </Sequence>
       </If.Else>
     </If>
-    <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="521.6,48" sap2010:WorkflowViewState.IdRef="WriteLine_3" Text="[String.Join(environment.NewLine, newfiles.Select(Function(f) System.IO.Path.GetFileName(f)))]" />
+    <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="486.4,113.6" sap2010:WorkflowViewState.IdRef="WriteLine_3" Text="[String.Join(environment.NewLine, newfiles.Select(Function(f) System.IO.Path.GetFileName(f)))]" />
   </Sequence>
 </Activity>
