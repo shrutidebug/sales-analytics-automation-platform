@@ -414,11 +414,7 @@ Sales Analytics & Automation Platform/
 │
 ├── sql/
 │   ├── analysis.sql
-<<<<<<< HEAD
-│   ├── schema.sql
-=======
 │   └── schema.sql
->>>>>>> 81a054a (Reshape README.md)
 │
 ├── src/
 │   ├── generate_data.py
@@ -495,12 +491,8 @@ Install:
 
 ```bash
 git clone https://github.com/shrutidebug/sales-analytics-automation-platform.git
-<<<<<<< HEAD
-cd sales-analytics-automation-platform```
-=======
 cd sales-analytics-automation-platform
 ```
->>>>>>> 81a054a (Reshape README.md)
 
 ## 2. Create a Python Virtual Environment
 
