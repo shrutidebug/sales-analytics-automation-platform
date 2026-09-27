@@ -1,4 +1,4 @@
-# Sales Analytics & Automation Platform 📊🤖
+# Sales Analytics & Automation Platform
 
 An end-to-end **Sales Analytics & Automation Platform** that transforms raw Excel sales files into structured data, business insights, interactive Power BI dashboards, and automatically distributed PDF reports.
 
@@ -18,7 +18,7 @@ An end-to-end **Sales Analytics & Automation Platform** that transforms raw Exce
 
 ---
 
-## 📌 Project Overview
+## Project Overview
 
 The Sales Analytics & Automation Platform is an end-to-end data analytics and automation project designed to transform raw sales data into structured business insights and automated reports.
 
@@ -30,7 +30,7 @@ Power BI provides a five-page interactive dashboard, while UiPath automates the 
 
 ---
 
-## 🎯 Business Problem
+## Business Problem
 
 Sales reporting can involve repetitive manual activities:
 
@@ -47,29 +47,7 @@ The goal of this project is to automate this workflow and create a repeatable pr
 
 ---
 
-## 💼 Business Use Cases
-
-### Sales Performance
-Analyze revenue, transaction volume, and sales trends over time.
-
-### Regional Analysis
-Compare sales performance across different regions.
-
-### Product Analysis
-Analyze product-level sales, quantity sold, and revenue contribution.
-
-### Customer Analysis
-Understand customer-level sales activity and contribution.
-
-### Automated Reporting
-Automatically generate and distribute an updated sales report when new input data is available.
-
-### Data Quality
-Detect invalid records, missing required values, inconsistent formats, and duplicate transactions during ETL processing.
-
----
-
-# 🏗️ System Architecture
+# System Architecture
 
 ```text
 ┌─────────────────────┐
@@ -144,7 +122,7 @@ Detect invalid records, missing required values, inconsistent formats, and dupli
 
 ---
 
-# 🔄 End-to-End Workflow
+# End-to-End Workflow
 
 ### 1. Input Data
 Monthly sales data is received as Excel files in `data/raw/`.
@@ -172,7 +150,7 @@ The completed Power BI report is exported as a PDF and automatically attached to
 
 ---
 
-# ⭐ Database Design
+# Database Design
 
 The PostgreSQL database follows a **star schema**.
 
@@ -209,6 +187,14 @@ Contains transaction-level sales data:
 - `discount`
 - `sales_amount`
 
+### Fact Table Grain
+
+The grain of `fact_sales` is **one cleaned source sales transaction row**.
+
+`order_id` identifies the source order, but it is not used as the sole uniqueness constraint because an order can contain multiple transaction lines.
+
+Exact duplicate transactions are prevented during ETL loading using the relevant transaction fields.
+
 ## Dimension Tables
 
 ### `dim_customer`
@@ -225,7 +211,7 @@ Stores calendar information including full date, day, month, month name, quarter
 
 ---
 
-# 📊 SQL Analytics
+# SQL Analytics
 
 SQL is used to answer business questions and generate analytical outputs.
 
@@ -264,36 +250,58 @@ SQL is used to answer business questions and generate analytical outputs.
 
 ---
 
-# 📈 Power BI Dashboard
+# Power BI Dashboard
 
 The Power BI report contains **five pages**.
 
 ### 1. Executive Overview
 Provides a high-level view of overall sales performance and key KPIs.
 
+![Executive Overview](docs/screenshots/Executive_overview.png)
+
 ### 2. Regional Analysis
 Analyzes sales performance across regions.
+
+![Regional Analysis](docs/screenshots/Regional_analysis.png)
 
 ### 3. Product Analysis
 Provides product-level sales and performance insights.
 
+![Product Analysis](docs/screenshots/Product_analysis.png)
+
 ### 4. Customer Analysis
 Shows customer-level sales activity and contribution.
+
+![Customer Analysis](docs/screenshots/Customer_analysis.png)
 
 ### 5. Time & Sales Analysis
 Provides time-based sales trends and transaction analysis.
 
+![Time & Sales Analysis](docs/screenshots/Time_Sales_analysis.png)
+
+### Power BI Data Model
+
+The report uses the PostgreSQL star schema:
+
+```text
+fact_sales
+├── dim_date
+├── dim_customer
+├── dim_product
+└── dim_region
+```
+
 Power BI uses PostgreSQL as the data source and is refreshed by the UiPath workflow.
 
-The `.pbix` file is intentionally not included in the GitHub repository because it is a binary project artifact.
+The `.pbix` file is maintained locally and is not committed to GitHub.
 
-The completed dashboard is documented through screenshots in `docs/screenshots/`.
+The repository documents the Power BI implementation through the star-schema model, dashboard screenshots, PostgreSQL schema, and SQL analytics.
 
-To recreate the dashboard, connect Power BI Desktop to the PostgreSQL `sales_analytics` database and build the report using the star schema described above.
+![PostgreSQL Star Schema](docs/screenshots/Postgres_star_schema.png)
 
 ---
 
-# 🤖 UiPath Automation
+# UiPath Automation
 
 UiPath acts as the orchestration layer for the reporting process.
 
@@ -325,15 +333,21 @@ The automation compares Excel files in `data/raw` against `data/processed_files.
 ## Python ETL Execution
 UiPath launches the project's Python virtual environment and executes the ETL pipeline.
 
+![UiPath File Detection and ETL](docs/screenshots/UiPath_file_detection_etl.png)
+
+
 ## Power BI Automation
 UiPath opens Power BI Desktop, refreshes the report, exports it to PDF, waits for the export to finish, and copies the completed PDF into `reports/`.
+
 
 ## Email Automation
 The completed PDF is attached to an SMTP email and sent to the configured recipients.
 
+![UiPath Reporting Workflow](docs/screenshots/UiPath_reporting_workflow.png)
+
 ---
 
-# 🛡️ Data Quality & Error Handling
+# Data Quality & Error Handling
 
 The project was designed to handle several real-world data and execution problems.
 
@@ -366,57 +380,7 @@ Execution information is stored in dedicated log files for monitoring and troubl
 
 ---
 
-# 📸 Project Screenshots
-
-The following screenshots document the major components of the completed platform.
-
-## Power BI Dashboard
-
-### Executive Overview
-
-![Executive Overview](docs/screenshots/Executive_overview.png)
-
-### Regional Analysis
-
-![Regional Analysis](docs/screenshots/Regional_analysis.png)
-
-### Product Analysis
-
-![Product Analysis](docs/screenshots/Product_analysis.png)
-
-### Customer Analysis
-
-![Customer Analysis](docs/screenshots/Customer_analysis.png)
-
-### Time & Sales Analysis
-
-![Time & Sales Analysis](docs/screenshots/Time_Sales_analysis.png)
-
-## PostgreSQL Star Schema
-
-The database uses a central `fact_sales` table connected to customer, product, region, and date dimensions.
-
-![PostgreSQL Star Schema](docs/screenshots/Postgres_star_schema.png)
-
-## UiPath Automation
-
-### File Detection & ETL
-
-The workflow detects unprocessed files and triggers the Python ETL process.
-
-![UiPath File Detection and ETL](docs/screenshots/UiPath_file_detection_etl.png)
-
-### Reporting Automation
-
-The workflow refreshes Power BI, exports the report to PDF, copies the completed report, sends the PDF through SMTP email, and writes execution logs.
-
-![UiPath Reporting Workflow](docs/screenshots/UiPath_reporting_workflow.png)
-
----
-
-
-
-# 📁 Project Structure
+# Project Structure
 
 ```text
 Sales Analytics & Automation Platform/
@@ -450,7 +414,11 @@ Sales Analytics & Automation Platform/
 │
 ├── sql/
 │   ├── analysis.sql
+<<<<<<< HEAD
 │   ├── schema.sql
+=======
+│   └── schema.sql
+>>>>>>> 81a054a (Reshape README.md)
 │
 ├── src/
 │   ├── generate_data.py
@@ -463,16 +431,15 @@ Sales Analytics & Automation Platform/
 │   └── SalesAnalyticsAutomation/
 │       └── Main.xaml
 │
-├── .venv/
-│
-└── README.md
+└── .venv/
+ 
 ```
 
 ---
 
 
 
-# 🛠️ Technology Stack
+# Technology Stack
 
 | Technology | Purpose |
 |---|---|
@@ -490,7 +457,7 @@ Sales Analytics & Automation Platform/
 
 ---
 
-# 🧪 Testing & Validation
+# Testing & Validation
 
 The platform was tested for:
 
@@ -512,7 +479,7 @@ The final duplicate-integrity check returned **0 duplicate transaction groups**.
 ---
 
 
-# ⚙️ Installation & Setup
+# Installation & Setup
 
 ## Prerequisites
 
@@ -528,7 +495,12 @@ Install:
 
 ```bash
 git clone https://github.com/shrutidebug/sales-analytics-automation-platform.git
+<<<<<<< HEAD
 cd sales-analytics-automation-platform```
+=======
+cd sales-analytics-automation-platform
+```
+>>>>>>> 81a054a (Reshape README.md)
 
 ## 2. Create a Python Virtual Environment
 
@@ -572,49 +544,7 @@ Open `UiPath/SalesAnalyticsAutomation`, open `Main.xaml`, and run the workflow.
 
 ---
 
-# 📤 Project Outputs
-
-### PostgreSQL
-Cleaned and structured sales data stored in the star schema.
-
-### Power BI
-Five-page interactive sales dashboard.
-
-### PDF Report
-Automated PDF version of the Power BI report.
-
-### Email
-Automated distribution of the generated PDF report.
-
-### Logs
-Execution and ETL logs stored in the `logs` directory.
-
----
-
-# 📌 Key Project Outcomes
-
-This project demonstrates practical experience with:
-
-- End-to-end ETL development
-- Data cleaning and validation
-- Excel data processing
-- PostgreSQL database design
-- Star schema implementation
-- SQL analytics
-- Power BI dashboard development
-- Incremental data processing
-- Duplicate prevention
-- UiPath workflow automation
-- Automated PDF reporting
-- Email automation
-- Error handling
-- Logging
-- Failure recovery
-- End-to-end testing
-
----
-
-# 🚀 Future Enhancements
+# Future Enhancements
 
 Potential improvements include:
 
@@ -630,7 +560,7 @@ Potential improvements include:
 
 ---
 
-# 📊 Project Status
+# Project Status
 
 | Area | Status |
 |---|:---:|
@@ -646,7 +576,7 @@ Potential improvements include:
 
 ---
 
-# 👩‍💻 Author
+# Author
 
 **Shruti Saxena**
 
