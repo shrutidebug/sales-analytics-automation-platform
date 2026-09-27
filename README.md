@@ -10,8 +10,7 @@ An end-to-end **Sales Analytics & Automation Platform** that transforms raw Exce
 
 ## Results
 
-- **14,856 sales records** loaded into PostgreSQL `fact_sales`
-- **14,856 unique Order IDs** represented in the final dataset
+- **14,856 sales records across 14,856 unique Order IDs** loaded into PostgreSQL `fact_sales`
 - **0 exact duplicate transaction records** after reruns
 - **5-page Power BI dashboard** covering executive, regional, product, customer, and time-based analysis
 - **Automated PDF generation and email delivery** through UiPath
@@ -450,8 +449,8 @@ Sales Analytics & Automation Platform/
 ├── reports/
 │
 ├── sql/
-    ├── analysis.sql
-    ├── schema.sql
+│   ├── analysis.sql
+│   ├── schema.sql
 │
 ├── src/
 │   ├── generate_data.py
@@ -528,7 +527,7 @@ Install:
 ## 1. Clone the Project
 
 ```bash
-git clone [https://github.com/shrutidebug/sales-analytics-automation-platform.git](https://github.com/shrutidebug/sales-analytics-automation-platform)
+git clone https://github.com/shrutidebug/sales-analytics-automation-platform.git
 cd sales-analytics-automation-platform```
 
 ## 2. Create a Python Virtual Environment
@@ -555,7 +554,7 @@ pip install -r requirements.txt
 CREATE DATABASE sales_analytics;
 ```
 
-Create and populate the required dimension and fact tables according to the project database schema.
+Run sql/schema.sql to create the tables.
 
 ## 5. Run the ETL
 
