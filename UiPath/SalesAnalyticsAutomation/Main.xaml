@@ -125,7 +125,7 @@
       <x:Boolean x:Key="ShouldExpandAll">False</x:Boolean>
     </scg:Dictionary>
   </sap:WorkflowViewStateService.ViewState>
-  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="841.2,1552.8" sap2010:WorkflowViewState.IdRef="Sequence_10">
+  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="1213.2,1552.8" sap2010:WorkflowViewState.IdRef="Sequence_10">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Name="reportRecipients" />
       <Variable x:TypeArguments="s:String[]" Name="newfiles" />
@@ -266,7 +266,7 @@
                   </sap:WorkflowViewStateService.ViewState>
                 </ui:InvokeCode>
                 <ui:AppendLine File="{x:Null}" DisplayName="Append Line" FileName="[projectRoot + &quot;\logs\automation_log.txt&quot;]" sap:VirtualizedContainerService.HintSize="416,56.8" sap2010:WorkflowViewState.IdRef="AppendLine_4" Text="[&quot;Python ETL completed successfully...&quot; + DateTime.Now.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;)]" UseDefaultEncoding="False" />
-                <uix:NApplicationCard AttachMode="ByInstance" DisplayName="Use Application" HealingAgentBehavior="Job" sap:VirtualizedContainerService.HintSize="451.2,248" sap2010:WorkflowViewState.IdRef="NApplicationCard_1" ScopeGuid="ace51d00-b386-42b5-96f8-d23cad4593af" Version="V2">
+                <uix:NApplicationCard AttachMode="ByInstance" DisplayName="Use Application" HealingAgentBehavior="Job" sap:VirtualizedContainerService.HintSize="416,48" sap2010:WorkflowViewState.IdRef="NApplicationCard_1" ScopeGuid="ace51d00-b386-42b5-96f8-d23cad4593af" Version="V2">
                   <uix:NApplicationCard.Body>
                     <ActivityAction x:TypeArguments="x:Object">
                       <ActivityAction.Argument>
@@ -406,9 +406,6 @@
                     <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
                   </ActivityAction.Argument>
                   <Sequence DisplayName="Catch" sap:VirtualizedContainerService.HintSize="449.6,24.8" sap2010:WorkflowViewState.IdRef="Sequence_8">
-                    <Sequence.Variables>
-                      <Variable x:TypeArguments="s:Exception" Name="ErrorDetail" />
-                    </Sequence.Variables>
                     <sap:WorkflowViewStateService.ViewState>
                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
                         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
